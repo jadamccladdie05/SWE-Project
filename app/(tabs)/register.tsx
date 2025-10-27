@@ -13,15 +13,18 @@ import {
   View,
 } from "react-native";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password");
+  const handleRegister = () => {
+    if (!name || !email || !password || !confirmPassword) {
+      Alert.alert("Error", "Please fill in all fields");
       return;
     }
 
@@ -31,7 +34,17 @@ export default function LoginScreen() {
       return;
     }
 
-    // Navigate to explore tab (dashboard)
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    // Navigate to dashboard
     router.push("/explore");
   };
 
@@ -45,11 +58,22 @@ export default function LoginScreen() {
           <View style={styles.iconContainer}>
             <Ionicons name="cart" size={64} color="#16a34a" />
           </View>
-          <Text style={styles.title}>CartIQ</Text>
-          <Text style={styles.subtitle}>Smart Grocery Shopping</Text>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Join CartIQ today</Text>
         </View>
 
         <View style={styles.formContainer}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Full Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="John Doe"
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
+            />
+          </View>
+
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email Address</Text>
             <TextInput
@@ -87,14 +111,41 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Sign In</Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.passwordInput}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                style={styles.eyeIcon}
+              >
+                <Ionicons
+                  name={showConfirmPassword ? "eye-off" : "eye"}
+                  size={24}
+                  color="#6b7280"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            style={styles.registerButton}
+            onPress={handleRegister}
+          >
+            <Text style={styles.registerButtonText}>Create Account</Text>
           </TouchableOpacity>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>{"Don't have an account? "}</Text>
-            <TouchableOpacity onPress={() => router.push("/register")}>
-              <Text style={styles.linkText}>Sign up</Text>
+            <Text style={styles.footerText}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => router.push("/")}>
+              <Text style={styles.linkText}>Sign in</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -173,14 +224,14 @@ const styles = StyleSheet.create({
   eyeIcon: {
     padding: 12,
   },
-  loginButton: {
+  registerButton: {
     backgroundColor: "#16a34a",
     borderRadius: 8,
     padding: 16,
     alignItems: "center",
     marginTop: 8,
   },
-  loginButtonText: {
+  registerButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",

@@ -1,43 +1,47 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
-export default function LoginScreen() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function LoginScreen({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = () => {
     if (!email || !password) {
-      Alert.alert("Error", "Please enter both email and password");
+      Alert.alert('Error', 'Please enter both email and password');
       return;
     }
 
+    // Simple email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert("Error", "Please enter a valid email address");
+      Alert.alert('Error', 'Please enter a valid email address');
       return;
     }
 
-    // Navigate to explore tab (dashboard)
-    router.push("/explore");
+    // Navigate to dashboard with user info
+    navigation.navigate('Dashboard', { 
+      user: { 
+        name: email.split('@')[0], 
+        email: email 
+      } 
+    });
   };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -79,7 +83,7 @@ export default function LoginScreen() {
                 style={styles.eyeIcon}
               >
                 <Ionicons
-                  name={showPassword ? "eye-off" : "eye"}
+                  name={showPassword ? 'eye-off' : 'eye'}
                   size={24}
                   color="#6b7280"
                 />
@@ -92,8 +96,8 @@ export default function LoginScreen() {
           </TouchableOpacity>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>{"Don't have an account? "}</Text>
-            <TouchableOpacity onPress={() => router.push("/register")}>
+            <Text style={styles.footerText}>Don&apos;t have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
               <Text style={styles.linkText}>Sign up</Text>
             </TouchableOpacity>
           </View>
@@ -106,15 +110,15 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0fdf4",
+    backgroundColor: '#f0fdf4',
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 20,
   },
   header: {
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 40,
   },
   iconContainer: {
@@ -122,19 +126,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontWeight: "bold",
-    color: "#1f2937",
+    fontWeight: 'bold',
+    color: '#1f2937',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#6b7280",
+    color: '#6b7280',
   },
   formContainer: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -145,25 +149,25 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
+    fontWeight: '600',
+    color: '#374151',
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#d1d5db",
+    borderColor: '#d1d5db',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   passwordContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#d1d5db",
+    borderColor: '#d1d5db',
     borderRadius: 8,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   passwordInput: {
     flex: 1,
@@ -174,29 +178,29 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   loginButton: {
-    backgroundColor: "#16a34a",
+    backgroundColor: '#16a34a',
     borderRadius: 8,
     padding: 16,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 8,
   },
   loginButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   footer: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 24,
   },
   footerText: {
-    color: "#6b7280",
+    color: '#6b7280',
     fontSize: 14,
   },
   linkText: {
-    color: "#16a34a",
+    color: '#16a34a',
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });
